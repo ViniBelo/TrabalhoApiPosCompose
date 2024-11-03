@@ -16,7 +16,7 @@ private object Screens {
     const val FORM_CAR = "formCar"
 }
 
-private object Arguments {
+object Arguments {
     const val CAR_ID = "carId"
 }
 

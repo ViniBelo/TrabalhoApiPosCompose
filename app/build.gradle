@@ -81,6 +81,9 @@ dependencies {
     implementation(libs.coil.compose)
     implementation(libs.coil.network.okhttp)
 
+    // Android Maps Compose composables for the Maps SDK for Android
+    implementation(libs.maps.compose)
+
     // Firebase
     implementation platform(libs.firebase.bom)
     implementation libs.firebase.analytics
