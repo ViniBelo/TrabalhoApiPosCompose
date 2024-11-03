@@ -7,6 +7,7 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import br.com.vinibelo.trabalhoapicompose.ui.theme.car.list.ListCarsScreen
 import br.com.vinibelo.trabalhoapicompose.ui.theme.TrabalhoApiComposeTheme
+import br.com.vinibelo.trabalhoapicompose.ui.theme.car.AppCars
 
 class MainActivity : ComponentActivity() {
     @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
@@ -15,7 +16,7 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             TrabalhoApiComposeTheme {
-                ListCarsScreen()
+                AppCars()
             }
         }
     }
