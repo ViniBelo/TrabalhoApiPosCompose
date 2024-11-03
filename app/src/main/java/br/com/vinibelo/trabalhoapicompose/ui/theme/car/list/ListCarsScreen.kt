@@ -48,7 +48,7 @@ fun CarList(
                 leadingContent = {
                     CarImage(
                         modifier = Modifier.size(70.dp),
-                        car = car
+                        imageUrl = car.imageUrl
                     )
                 }
             )

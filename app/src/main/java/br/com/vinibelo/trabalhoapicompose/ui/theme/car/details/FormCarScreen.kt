@@ -27,6 +27,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import br.com.vinibelo.trabalhoapicompose.R
+import br.com.vinibelo.trabalhoapicompose.model.Car
 import br.com.vinibelo.trabalhoapicompose.ui.theme.TrabalhoApiComposeTheme
 import br.com.vinibelo.trabalhoapicompose.ui.theme.car.common.CarImage
 import com.google.maps.android.compose.MapProperties
@@ -43,22 +44,12 @@ fun FormCarScreen(
     ) { paddingValues ->
         val columnModifier = Modifier
             .padding(paddingValues)
-            .padding(top = 32.dp)
         Column(
             modifier = columnModifier,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Row {
-                CarImage(
-                    modifier = Modifier.size(140.dp),
-                    car = viewModel.state.car
-                )
-            }
             FormContent(
-                name = viewModel.state.car.name,
-                year = viewModel.state.car.year,
-                license = viewModel.state.car.license,
-                imageUrl = viewModel.state.car.imageUrl
+                car = viewModel.state.car
             )
         }
     }
@@ -67,23 +58,30 @@ fun FormCarScreen(
 @Composable
 fun FormContent(
     modifier: Modifier = Modifier,
-    name: String,
-    year: String,
-    license: String,
-    imageUrl: String
+    car: Car
 ) {
     Column(
         modifier = modifier
             .padding(24.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
+        Row(
+            modifier = modifier
+                .padding(bottom = 16.dp)
+        ) {
+            CarImage(
+                modifier = Modifier
+                    .size(140.dp),
+                imageUrl = car.imageUrl
+            )
+        }
         val textFieldModifier = Modifier.fillMaxWidth()
             .padding(top = 12.dp)
         Row {
             OutlinedTextField(
                 modifier = textFieldModifier,
                 label = { Text("Name") },
-                value = name,
+                value = car.name,
                 onValueChange = {}
             )
         }
@@ -91,7 +89,7 @@ fun FormContent(
             OutlinedTextField(
                 modifier = textFieldModifier,
                 label = { Text("Year") },
-                value = year,
+                value = car.year,
                 onValueChange = {}
             )
         }
@@ -99,7 +97,7 @@ fun FormContent(
             OutlinedTextField(
                 modifier = textFieldModifier,
                 label = { Text("License") },
-                value = license,
+                value = car.license,
                 onValueChange = {}
             )
         }
@@ -107,7 +105,7 @@ fun FormContent(
             OutlinedTextField(
                 modifier = textFieldModifier,
                 label = { Text("Image Url") },
-                value = imageUrl,
+                value = car.imageUrl,
                 onValueChange = {},
                 maxLines = 1,
                 trailingIcon = {
@@ -127,7 +125,7 @@ fun FormContent(
         ) {
             Button(
                 onClick = {},
-                modifier = modifier.padding(end = 16.dp)
+                modifier = Modifier.padding(end = 16.dp)
             ) {
                 Text(
                     modifier = Modifier.padding(end = 2.dp),
@@ -165,10 +163,12 @@ fun FormContent(
 fun FormContentPreview() {
     TrabalhoApiComposeTheme {
         FormContent(
-            name = "Supra",
-            year = "2001/2002",
-            license = "ABC-1234",
-            imageUrl = "https://www.ronbrooks.co.uk/wp-content/uploads/2023/06/toyota-supra-mk4.png"
+            car = Car(
+                name = "Supra",
+                year = "2001/2002",
+                license = "ABC-1234",
+                imageUrl = "https://www.ronbrooks.co.uk/wp-content/uploads/2023/06/toyota-supra-mk4.png"
+            )
         )
     }
 }

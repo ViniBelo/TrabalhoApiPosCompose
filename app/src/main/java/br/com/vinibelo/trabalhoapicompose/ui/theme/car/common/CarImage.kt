@@ -10,7 +10,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import br.com.vinibelo.trabalhoapicompose.R
-import br.com.vinibelo.trabalhoapicompose.model.Car
 import coil3.compose.AsyncImage
 import coil3.request.ImageRequest
 import coil3.request.transformations
@@ -19,12 +18,12 @@ import coil3.transform.CircleCropTransformation
 @Composable
 fun CarImage(
     modifier: Modifier = Modifier,
-    car: Car
+    imageUrl: String
 ) {
     Box(modifier = modifier) {
         AsyncImage(
             model = ImageRequest.Builder(LocalContext.current)
-                .data(car.imageUrl)
+                .data(imageUrl)
                 .transformations(CircleCropTransformation())
                 .build(),
             contentDescription = stringResource(R.string.car_picture),
