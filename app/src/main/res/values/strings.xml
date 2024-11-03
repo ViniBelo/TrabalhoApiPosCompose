@@ -1,3 +1,4 @@
 <resources>
-    <string name="app_name">TrabalhoApiCompose</string>
+    <string name="app_name">Cars Spotted</string>
+    <string name="car_picture">Car\'s picture</string>
 </resources>
