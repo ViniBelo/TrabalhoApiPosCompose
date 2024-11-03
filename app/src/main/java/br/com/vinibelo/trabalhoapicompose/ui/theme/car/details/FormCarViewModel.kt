@@ -43,13 +43,90 @@ class FormCarViewModel(
 
                     is Result.Success -> {
                         state.copy(
-                            car = result.data
+                            car = result.data,
+                            name = state.name.copy(value = result.data.name),
+                            year = state.year.copy(value = result.data.year),
+                            license = state.license.copy(value = result.data.license),
+                            imageUrl = state.imageUrl.copy(value = result.data.imageUrl)
                         )
                     }
                 }
             }
         }
         state = state.copy(isLoading = false)
+    }
+
+    fun onNameChanged(newName: String) {
+        if (state.name.value != newName) {
+            state = state.copy(
+                name = state.name.copy(
+                    value = newName
+                )
+            )
+        }
+    }
+
+    fun onYearChanged(newYear: String) {
+        if (state.year.value != newYear) {
+            state = state.copy(
+                year = state.year.copy(
+                    value = newYear
+                )
+            )
+        }
+    }
+
+    fun onLicenseChanged(newLicense: String) {
+        if (state.license.value != newLicense) {
+            state = state.copy(
+                license = state.license.copy(
+                    value = newLicense
+                )
+            )
+        }
+    }
+
+    fun onImageUrlChanged(newImageUrl: String) {
+        if (state.imageUrl.value != newImageUrl) {
+            state = state.copy(
+                imageUrl = state.imageUrl.copy(
+                    value = newImageUrl
+                )
+            )
+        }
+    }
+
+    fun saveCar() {
+        state = state.copy(isSaving = true)
+        val car = state.car.copy(
+            name = state.name.value,
+            year = state.year.value,
+            license = state.license.value,
+            imageUrl = state.imageUrl.value
+        )
+        CoroutineScope(Dispatchers.IO).launch {
+            val result = safeApiCall {
+                RetrofitClient.apiService.updateCar(
+                    id = carId,
+                    car = car
+                )
+            }
+            withContext(Dispatchers.Main) {
+                state = when (result) {
+                    is Result.Error -> {
+                        state.copy(
+                            errorWhileSaving = true
+                        )
+                    }
+                    is Result.Success -> {
+                        state.copy(
+                            persistedOrDeletedCar = true
+                        )
+                    }
+                }
+            }
+        }
+        state = state.copy(isSaving = false)
     }
 
     fun deleteCar() {
@@ -61,14 +138,12 @@ class FormCarViewModel(
                 state = when (result) {
                     is Result.Error -> {
                         state.copy(
-                            isDeleting = false,
                             errorWhileLoading = true
                         )
                     }
 
                     is Result.Success -> {
                         state.copy(
-                            isDeleting = false,
                             persistedOrDeletedCar = true
                         )
                     }
@@ -76,6 +151,7 @@ class FormCarViewModel(
             }
             hideConfirmationDialog()
         }
+        state = state.copy(isDeleting = false)
     }
 
     fun hideConfirmationDialog() {

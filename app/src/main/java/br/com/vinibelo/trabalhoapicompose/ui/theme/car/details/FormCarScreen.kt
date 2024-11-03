@@ -3,8 +3,11 @@ package br.com.vinibelo.trabalhoapicompose.ui.theme.car.details
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.AlertDialog
@@ -72,7 +75,15 @@ fun FormCarScreen(
         ) {
             FormContent(
                 onDeletePressed = viewModel::showConfirmationDialog,
-                car = viewModel.state.car
+                onSavePressed = viewModel::saveCar,
+                name = viewModel.state.name,
+                year = viewModel.state.year,
+                license = viewModel.state.license,
+                imageUrl = viewModel.state.imageUrl,
+                onNameChanged = viewModel::onNameChanged,
+                onYearChanged = viewModel::onYearChanged,
+                onLicenseChanged = viewModel::onLicenseChanged,
+                onImageUrlChanged = viewModel::onImageUrlChanged
             )
         }
     }
@@ -82,11 +93,21 @@ fun FormCarScreen(
 fun FormContent(
     modifier: Modifier = Modifier,
     onDeletePressed: () -> Unit,
-    car: Car
+    onSavePressed: () -> Unit,
+    name: FormField<String>,
+    year: FormField<String>,
+    license: FormField<String>,
+    imageUrl: FormField<String>,
+    onNameChanged: (String) -> Unit,
+    onYearChanged: (String) -> Unit,
+    onLicenseChanged: (String) -> Unit,
+    onImageUrlChanged: (String) -> Unit
 ) {
     Column(
         modifier = modifier
-            .padding(24.dp),
+            .padding(16.dp)
+            .imePadding()
+            .verticalScroll(rememberScrollState()),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Row(
@@ -96,7 +117,7 @@ fun FormContent(
             CarImage(
                 modifier = Modifier
                     .size(140.dp),
-                imageUrl = car.imageUrl
+                imageUrl = imageUrl.value
             )
         }
         val textFieldModifier = Modifier
@@ -106,32 +127,32 @@ fun FormContent(
             OutlinedTextField(
                 modifier = textFieldModifier,
                 label = { Text("Name") },
-                value = car.name,
-                onValueChange = {}
+                value = name.value,
+                onValueChange = onNameChanged
             )
         }
         Row {
             OutlinedTextField(
                 modifier = textFieldModifier,
                 label = { Text("Year") },
-                value = car.year,
-                onValueChange = {}
+                value = year.value,
+                onValueChange = onYearChanged
             )
         }
         Row {
             OutlinedTextField(
                 modifier = textFieldModifier,
                 label = { Text("License") },
-                value = car.license,
-                onValueChange = {}
+                value = license.value,
+                onValueChange = onLicenseChanged
             )
         }
         Row {
             OutlinedTextField(
                 modifier = textFieldModifier,
                 label = { Text("Image Url") },
-                value = car.imageUrl,
-                onValueChange = {},
+                value = imageUrl.value,
+                onValueChange = onImageUrlChanged,
                 maxLines = 1,
                 trailingIcon = {
                     IconButton(
@@ -149,16 +170,15 @@ fun FormContent(
             modifier = Modifier.padding(top = 32.dp)
         ) {
             Button(
-                onClick = {},
+                onClick = onSavePressed,
                 modifier = Modifier.padding(end = 16.dp)
             ) {
-                Text(
-                    modifier = Modifier.padding(end = 2.dp),
-                    text = "Save"
-                )
                 Icon(
                     painter = painterResource(R.drawable.ic_save),
                     contentDescription = ""
+                )
+                Text(
+                    text = "Save"
                 )
             }
             Button(
@@ -170,13 +190,12 @@ fun FormContent(
                 ),
                 onClick = onDeletePressed
             ) {
-                Text(
-                    modifier = Modifier.padding(end = 2.dp),
-                    text = "Delete"
-                )
                 Icon(
                     imageVector = Icons.Filled.Delete,
                     contentDescription = ""
+                )
+                Text(
+                    text = "Delete"
                 )
             }
         }
@@ -189,12 +208,15 @@ fun FormContentPreview() {
     TrabalhoApiComposeTheme {
         FormContent(
             onDeletePressed = {},
-            car = Car(
-                name = "Supra",
-                year = "2001/2002",
-                license = "ABC-1234",
-                imageUrl = "https://www.ronbrooks.co.uk/wp-content/uploads/2023/06/toyota-supra-mk4.png"
-            )
+            onSavePressed = {},
+            name = FormField("Supra"),
+            year = FormField("2001/2002"),
+            license = FormField("ABC-1234"),
+            imageUrl = FormField("https://www.ronbrooks.co.uk/wp-content/uploads/2023/06/toyota-supra-mk4.png"),
+            onNameChanged = {},
+            onYearChanged = {},
+            onLicenseChanged = {},
+            onImageUrlChanged = {}
         )
     }
 }
