@@ -1,6 +1,7 @@
 package br.com.vinibelo.trabalhoapicompose.service
 
 import br.com.vinibelo.trabalhoapicompose.model.Car
+import retrofit2.http.DELETE
 import retrofit2.http.GET
 import retrofit2.http.Path
 
@@ -10,4 +11,7 @@ interface ApiService {
 
     @GET("car/{id}")
     suspend fun getCar(@Path("id") id: String): Car
+
+    @DELETE("car/{id}")
+    suspend fun deleteCar(@Path("id") id: String)
 }

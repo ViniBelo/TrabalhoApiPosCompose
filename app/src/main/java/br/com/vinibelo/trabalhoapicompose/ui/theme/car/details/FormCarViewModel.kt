@@ -27,7 +27,7 @@ class FormCarViewModel(
 
     private fun getCar() {
         state = state.copy(
-            loading = true,
+            isLoading = true,
             errorWhileLoading = false,
         )
         CoroutineScope(Dispatchers.IO).launch {
@@ -49,6 +49,40 @@ class FormCarViewModel(
                 }
             }
         }
-        state = state.copy(loading = false)
+        state = state.copy(isLoading = false)
+    }
+
+    fun deleteCar() {
+        state = state.copy(isDeleting = true)
+        CoroutineScope(Dispatchers.IO).launch {
+            val result = safeApiCall { RetrofitClient.apiService.deleteCar(carId) }
+
+            withContext(Dispatchers.Main) {
+                state = when (result) {
+                    is Result.Error -> {
+                        state.copy(
+                            isDeleting = false,
+                            errorWhileLoading = true
+                        )
+                    }
+
+                    is Result.Success -> {
+                        state.copy(
+                            isDeleting = false,
+                            persistedOrDeletedCar = true
+                        )
+                    }
+                }
+            }
+            hideConfirmationDialog()
+        }
+    }
+
+    fun hideConfirmationDialog() {
+        state = state.copy(showConfirmationDialog = false)
+    }
+
+    fun showConfirmationDialog() {
+        state = state.copy(showConfirmationDialog = true)
     }
 }

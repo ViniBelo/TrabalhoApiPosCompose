@@ -8,6 +8,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import br.com.vinibelo.trabalhoapicompose.ui.theme.car.common.SharedCarsViewModel
 import br.com.vinibelo.trabalhoapicompose.ui.theme.car.details.FormCarScreen
 import br.com.vinibelo.trabalhoapicompose.ui.theme.car.list.ListCarsScreen
 
@@ -36,8 +37,10 @@ fun AppCars(
         startDestination = startDestination,
         modifier = modifier
     ) {
+        val sharedCarsViewModel = SharedCarsViewModel()
         composable(route = Routes.LIST_CARS) {
             ListCarsScreen(
+                sharedCarsViewModel = sharedCarsViewModel,
                 onCarPressed = { car ->
                     navController.navigate("${Screens.FORM_CAR}?${Arguments.CAR_ID}=${car.id}")
                 }
@@ -52,7 +55,12 @@ fun AppCars(
                 }
             )
         ) {
-            FormCarScreen()
+            FormCarScreen(
+                sharedCarsViewModel = sharedCarsViewModel,
+                onReturnPressed = {
+                    navController.popBackStack()
+                }
+            )
         }
     }
 }

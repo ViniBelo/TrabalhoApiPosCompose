@@ -9,6 +9,7 @@ import androidx.compose.material3.ListItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -16,13 +17,19 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import br.com.vinibelo.trabalhoapicompose.model.Car
 import br.com.vinibelo.trabalhoapicompose.ui.theme.TrabalhoApiComposeTheme
 import br.com.vinibelo.trabalhoapicompose.ui.theme.car.common.CarImage
+import br.com.vinibelo.trabalhoapicompose.ui.theme.car.common.SharedCarsViewModel
 
 @Composable
 fun ListCarsScreen(
     modifier: Modifier = Modifier,
     onCarPressed: (Car) -> Unit,
+    sharedCarsViewModel: SharedCarsViewModel,
     viewModel: ListCarsViewModel = viewModel(),
 ) {
+    if (sharedCarsViewModel.changesOnCar) {
+        viewModel.fetchCars()
+        sharedCarsViewModel.setCarChanged(false)
+    }
     Scaffold(modifier = modifier) { paddingValues ->
         CarList(
             modifier.padding(paddingValues),
