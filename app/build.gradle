@@ -20,6 +20,12 @@ android {
         }
     }
 
+    buildscript {
+        dependencies {
+            classpath(libs.secrets.gradle.plugin)
+        }
+    }
+
     buildTypes {
         release {
             minifyEnabled false
@@ -87,6 +93,17 @@ dependencies {
     // Firebase
     implementation platform(libs.firebase.bom)
     implementation libs.firebase.analytics
+
+    // Firebase Firestorage
+    implementation libs.firebase.storage.ktx
+
+    // CameraX core library using the camera2 implementation
+    implementation libs.androidx.camera.core
+    implementation libs.androidx.camera.camera2
+    implementation libs.androidx.camera.lifecycle
+    implementation libs.androidx.camera.view
+    implementation libs.androidx.camera.mlkit.vision
+    implementation libs.androidx.camera.extensions
 
     // Firebase Auth
     implementation libs.firebase.auth

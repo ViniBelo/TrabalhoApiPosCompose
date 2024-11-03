@@ -3,6 +3,7 @@ package br.com.vinibelo.trabalhoapicompose.ui.theme.car.details
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.core.app.ActivityCompat
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import br.com.vinibelo.trabalhoapicompose.service.Result
@@ -94,6 +95,9 @@ class FormCarViewModel(
                 )
             )
         }
+    }
+
+    fun openCamera() {
     }
 
     fun saveCar() {

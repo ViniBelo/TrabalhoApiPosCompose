@@ -83,7 +83,8 @@ fun FormCarScreen(
                 onNameChanged = viewModel::onNameChanged,
                 onYearChanged = viewModel::onYearChanged,
                 onLicenseChanged = viewModel::onLicenseChanged,
-                onImageUrlChanged = viewModel::onImageUrlChanged
+                onImageUrlChanged = viewModel::onImageUrlChanged,
+                onCameraPressed = viewModel::openCamera
             )
         }
     }
@@ -101,7 +102,8 @@ fun FormContent(
     onNameChanged: (String) -> Unit,
     onYearChanged: (String) -> Unit,
     onLicenseChanged: (String) -> Unit,
-    onImageUrlChanged: (String) -> Unit
+    onImageUrlChanged: (String) -> Unit,
+    onCameraPressed: () -> Unit
 ) {
     Column(
         modifier = modifier
@@ -216,7 +218,8 @@ fun FormContentPreview() {
             onNameChanged = {},
             onYearChanged = {},
             onLicenseChanged = {},
-            onImageUrlChanged = {}
+            onImageUrlChanged = {},
+            onCameraPressed = {}
         )
     }
 }
