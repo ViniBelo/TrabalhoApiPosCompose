@@ -20,7 +20,7 @@ class ListCarsViewModel: ViewModel() {
         fetchCars()
     }
 
-    private fun fetchCars() {
+    fun fetchCars() {
         state = state.copy(
             loading = true,
             errorWhileLoading = false
