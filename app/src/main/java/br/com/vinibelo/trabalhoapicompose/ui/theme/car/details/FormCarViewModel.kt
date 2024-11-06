@@ -1,19 +1,25 @@
 package br.com.vinibelo.trabalhoapicompose.ui.theme.car.details
 
+import android.content.Context
+import android.net.Uri
+import android.widget.Toast
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import androidx.core.app.ActivityCompat
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
+import br.com.vinibelo.trabalhoapicompose.R
 import br.com.vinibelo.trabalhoapicompose.service.Result
 import br.com.vinibelo.trabalhoapicompose.service.RetrofitClient
 import br.com.vinibelo.trabalhoapicompose.service.safeApiCall
 import br.com.vinibelo.trabalhoapicompose.ui.theme.car.Arguments
+import com.google.firebase.ktx.Firebase
+import com.google.firebase.storage.ktx.storage
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.util.UUID
 
 class FormCarViewModel(
     savedStateHandle: SavedStateHandle
@@ -57,6 +63,40 @@ class FormCarViewModel(
         state = state.copy(isLoading = false)
     }
 
+    fun sendImage(uri: Uri, context: Context) {
+        state = state.copy(isUploadingImage = true)
+        CoroutineScope(Dispatchers.IO).launch {
+            val storage = Firebase.storage
+            val storageRef = storage.reference
+            val uniqueImageName = UUID.randomUUID()
+            val imageRef = storageRef.child("images/$uniqueImageName.jpg")
+
+            val bytesArray: ByteArray? = context.contentResolver
+                .openInputStream(uri)
+                ?.use { it.readBytes() }
+
+            CoroutineScope(Dispatchers.IO).launch {
+                bytesArray?.let {
+                    val uploadTask = imageRef.putBytes(bytesArray)
+                    uploadTask.addOnFailureListener {
+                        Toast.makeText(
+                            context,
+                            context.getString(R.string.image_upload_failed),
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }.addOnSuccessListener {
+                        imageRef.downloadUrl.addOnSuccessListener { uri ->
+                            state = state.copy(
+                                imageUrl = state.imageUrl.copy(value = uri.toString())
+                            )
+                        }
+                    }
+                }
+            }
+            state = state.copy(isUploadingImage = false)
+        }
+    }
+
     fun onNameChanged(newName: String) {
         if (state.name.value != newName) {
             state = state.copy(
@@ -95,9 +135,6 @@ class FormCarViewModel(
                 )
             )
         }
-    }
-
-    fun openCamera() {
     }
 
     fun saveCar() {

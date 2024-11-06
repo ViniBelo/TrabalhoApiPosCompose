@@ -5,4 +5,6 @@
     <string name="cancel">Cancel</string>
     <string name="attention">Attention</string>
     <string name="deleting_car_attention_message">Do you really want to delete this car data?</string>
+    <string name="image_upload_failed">Image upload failed</string>
+    <string name="image_upload_success">Image uploaded successfully</string>
 </resources>

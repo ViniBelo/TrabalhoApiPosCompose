@@ -1,5 +1,8 @@
 package br.com.vinibelo.trabalhoapicompose.ui.theme.car.details
 
+import android.net.Uri
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -28,27 +31,43 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.core.content.FileProvider
 import androidx.lifecycle.viewmodel.compose.viewModel
 import br.com.vinibelo.trabalhoapicompose.R
-import br.com.vinibelo.trabalhoapicompose.model.Car
 import br.com.vinibelo.trabalhoapicompose.ui.theme.TrabalhoApiComposeTheme
+import br.com.vinibelo.trabalhoapicompose.ui.theme.car.common.CameraViewModel
 import br.com.vinibelo.trabalhoapicompose.ui.theme.car.common.CarImage
 import br.com.vinibelo.trabalhoapicompose.ui.theme.car.common.SharedCarsViewModel
-import com.google.maps.android.compose.MapProperties
-import com.google.maps.android.compose.MapType
-import com.google.maps.android.compose.MapUiSettings
+import java.util.Objects
 
 @Composable
 fun FormCarScreen(
     modifier: Modifier = Modifier,
     onReturnPressed: () -> Unit,
     sharedCarsViewModel: SharedCarsViewModel,
+    cameraViewModel: CameraViewModel = viewModel(),
     viewModel: FormCarViewModel = viewModel()
 ) {
+    val context = LocalContext.current
+    val file = cameraViewModel.createImageFile()
+    val uri = FileProvider.getUriForFile(
+        Objects.requireNonNull(context),
+        "${context.packageName}.provider",
+        file
+    )
+    var capturedImageUri by remember { mutableStateOf<Uri>(Uri.EMPTY) }
+    val cameraLauncher = rememberLauncherForActivityResult(
+        ActivityResultContracts.TakePicture()
+    ) {
+        capturedImageUri = uri
+        viewModel.sendImage(uri, context)
+
+    }
     LaunchedEffect(viewModel.state.persistedOrDeletedCar) {
         if (viewModel.state.persistedOrDeletedCar) {
             onReturnPressed()
@@ -60,7 +79,7 @@ fun FormCarScreen(
             title = stringResource(R.string.attention),
             text = stringResource(R.string.deleting_car_attention_message),
             onConfirm = viewModel::deleteCar,
-            onDismiss = viewModel::hideConfirmationDialog
+            onDismiss = viewModel::hideConfirmationDialog,
         )
     }
 
@@ -84,7 +103,7 @@ fun FormCarScreen(
                 onYearChanged = viewModel::onYearChanged,
                 onLicenseChanged = viewModel::onLicenseChanged,
                 onImageUrlChanged = viewModel::onImageUrlChanged,
-                onCameraPressed = viewModel::openCamera
+                onCameraPressed = { cameraLauncher.launch(uri) }
             )
         }
     }
@@ -158,7 +177,7 @@ fun FormContent(
                 maxLines = 1,
                 trailingIcon = {
                     IconButton(
-                        onClick = {}
+                        onClick = onCameraPressed
                     ) {
                         Icon(
                             painter = painterResource(R.drawable.ic_camera),

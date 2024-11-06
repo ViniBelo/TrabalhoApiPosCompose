@@ -14,6 +14,7 @@ data class FormCarState(
     val isLoading: Boolean = false,
     val isSaving: Boolean = false,
     val isDeleting: Boolean = false,
+    val isUploadingImage: Boolean = false,
     val persistedOrDeletedCar: Boolean = false,
     val errorWhileLoading: Boolean = false,
     val errorWhileSaving: Boolean = false,
