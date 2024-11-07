@@ -140,17 +140,24 @@ class FormCarViewModel(
     fun saveCar() {
         state = state.copy(isSaving = true)
         val car = state.car.copy(
+            id = if (carId != "") carId else UUID.randomUUID().toString(),
             name = state.name.value,
             year = state.year.value,
             license = state.license.value,
             imageUrl = state.imageUrl.value
         )
         CoroutineScope(Dispatchers.IO).launch {
-            val result = safeApiCall {
-                RetrofitClient.apiService.updateCar(
-                    id = carId,
-                    car = car
-                )
+            val result = if (carId != "") {
+                safeApiCall {
+                    RetrofitClient.apiService.updateCar(
+                        id = car.id,
+                        car = car
+                    )
+                }
+            } else {
+                safeApiCall {
+                    RetrofitClient.apiService.createCar(car = car)
+                }
             }
             withContext(Dispatchers.Main) {
                 state = when (result) {
