@@ -5,6 +5,10 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.Icon
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -22,6 +26,7 @@ import br.com.vinibelo.trabalhoapicompose.ui.theme.car.common.SharedCarsViewMode
 fun ListCarsScreen(
     modifier: Modifier = Modifier,
     onCarPressed: (Car) -> Unit,
+    onAddPressed: () -> Unit,
     sharedCarsViewModel: SharedCarsViewModel,
     viewModel: ListCarsViewModel = viewModel(),
 ) {
@@ -29,7 +34,17 @@ fun ListCarsScreen(
         viewModel.fetchCars()
         sharedCarsViewModel.setCarChanged(false)
     }
-    Scaffold(modifier = modifier) { paddingValues ->
+    Scaffold(
+        modifier = modifier,
+        floatingActionButton = {
+            FloatingActionButton(onClick = onAddPressed) {
+                Icon(
+                    imageVector = Icons.Filled.Add,
+                    contentDescription = ""
+                )
+            }
+        }
+    ) { paddingValues ->
         CarList(
             modifier.padding(paddingValues),
             onCarPressed = onCarPressed,

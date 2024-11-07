@@ -6,7 +6,10 @@ data class Car(
     val year: String = "",
     val license: String = "",
     val imageUrl: String = "",
-    val place: CarLocation? = null
+    val place: CarLocation? = CarLocation(
+        latitude = 0.toDouble(),
+        longitude = 0.toDouble()
+    )
 )
 
 data class CarLocation(

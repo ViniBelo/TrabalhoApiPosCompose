@@ -41,6 +41,9 @@ fun AppCars(
         composable(route = Routes.LIST_CARS) {
             ListCarsScreen(
                 sharedCarsViewModel = sharedCarsViewModel,
+                onAddPressed = {
+                    navController.navigate(Screens.FORM_CAR)
+                },
                 onCarPressed = { car ->
                     navController.navigate("${Screens.FORM_CAR}?${Arguments.CAR_ID}=${car.id}")
                 }
