@@ -1,5 +1,6 @@
 package br.com.vinibelo.trabalhoapicompose.ui.theme.car.form
 
+import android.Manifest
 import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -27,6 +28,7 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -62,18 +64,25 @@ fun FormCarScreen(
     val context = LocalContext.current
     val file = cameraViewModel.createImageFile()
     val uri = FileProvider.getUriForFile(
-        Objects.requireNonNull(context),
+        context,
         "${context.packageName}.provider",
         file
     )
     var capturedImageUri by remember { mutableStateOf<Uri>(Uri.EMPTY) }
-    val cameraLauncher = rememberLauncherForActivityResult(
-        ActivityResultContracts.TakePicture()
-    ) {
-        capturedImageUri = uri
-        viewModel.sendImage(uri, context)
 
+    val cameraLauncher = rememberLauncherForActivityResult(ActivityResultContracts.TakePicture()) { success ->
+        if (success) {
+            capturedImageUri = uri
+            viewModel.sendImage(uri, context)
+        }
     }
+
+    val permissionLauncher = rememberLauncherForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted ->
+        if (isGranted) {
+            cameraLauncher.launch(uri)
+        }
+    }
+
     LaunchedEffect(viewModel.state.persistedOrDeletedCar) {
         if (viewModel.state.persistedOrDeletedCar) {
             onReturnPressed()
@@ -105,7 +114,7 @@ fun FormCarScreen(
             onYearChanged = viewModel::onYearChanged,
             onLicenseChanged = viewModel::onLicenseChanged,
             onImageUrlChanged = viewModel::onImageUrlChanged,
-            onCameraPressed = { cameraLauncher.launch(uri) },
+            onCameraPressed = { permissionLauncher.launch(Manifest.permission.CAMERA) },
             isEdit = viewModel.isEdit()
         )
     }

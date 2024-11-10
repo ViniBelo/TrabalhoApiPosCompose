@@ -1,11 +1,17 @@
 package br.com.vinibelo.trabalhoapicompose.ui.theme.car.form
 
+import android.Manifest.permission.CAMERA
+import android.app.Activity
 import android.content.Context
+import android.content.pm.PackageManager.PERMISSION_GRANTED
 import android.net.Uri
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import br.com.vinibelo.trabalhoapicompose.R
