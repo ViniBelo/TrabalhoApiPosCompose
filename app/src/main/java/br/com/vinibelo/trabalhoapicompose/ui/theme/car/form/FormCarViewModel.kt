@@ -63,6 +63,10 @@ class FormCarViewModel(
         state = state.copy(isLoading = false)
     }
 
+    fun isEdit(): Boolean {
+        return carId.isNotBlank()
+    }
+
     fun sendImage(uri: Uri, context: Context) {
         state = state.copy(isUploadingImage = true)
         CoroutineScope(Dispatchers.IO).launch {
@@ -101,80 +105,124 @@ class FormCarViewModel(
         if (state.name.value != newName) {
             state = state.copy(
                 name = state.name.copy(
-                    value = newName
+                    value = newName,
+                    errorMessageCode = validateName(newName)
                 )
             )
         }
     }
+
+    private fun validateName(name: String): Int =
+        if (name.isBlank())
+            R.string.name_required
+        else 0
 
     fun onYearChanged(newYear: String) {
         if (state.year.value != newYear) {
             state = state.copy(
                 year = state.year.copy(
-                    value = newYear
+                    value = newYear,
+                    errorMessageCode = validateYear(newYear)
                 )
             )
         }
     }
+
+    private fun validateYear(year: String): Int =
+        if (year.isBlank())
+            R.string.year_required
+        else 0
 
     fun onLicenseChanged(newLicense: String) {
         if (state.licence.value != newLicense) {
             state = state.copy(
                 licence = state.licence.copy(
-                    value = newLicense
+                    value = newLicense,
+                    errorMessageCode = validateLicense(newLicense)
                 )
             )
         }
     }
+
+    private fun validateLicense(license: String): Int =
+        if (license.isBlank())
+            R.string.license_required
+        else 0
 
     fun onImageUrlChanged(newImageUrl: String) {
         if (state.imageUrl.value != newImageUrl) {
             state = state.copy(
                 imageUrl = state.imageUrl.copy(
-                    value = newImageUrl
+                    value = newImageUrl,
+                    errorMessageCode = validateImageUrl(newImageUrl)
                 )
             )
         }
     }
 
+    private fun validateImageUrl(imageUrl: String): Int =
+        if (imageUrl.isBlank())
+            R.string.image_url_required
+        else 0
+
     fun saveCar() {
-        state = state.copy(isSaving = true)
-        val car = state.car.value.copy(
-            id = if (carId != "") carId else UUID.randomUUID().toString(),
-            name = state.name.value,
-            year = state.year.value,
-            licence = state.licence.value,
-            imageUrl = state.imageUrl.value
-        )
-        CoroutineScope(Dispatchers.IO).launch {
-            val result = if (carId != "") {
-                safeApiCall {
-                    RetrofitClient.apiService.updateCar(
-                        id = car.id,
-                        car = car
-                    )
-                }
-            } else {
-                safeApiCall {
-                    RetrofitClient.apiService.createCar(car = car)
-                }
-            }
-            withContext(Dispatchers.Main) {
-                state = when (result) {
-                    is Result.Error -> {
-                        state.copy(
-                            errorWhileSaving = true
+        if (isValidForm()) {
+            state = state.copy(isSaving = true)
+            val car = state.car.value.copy(
+                id = if (carId != "") carId else UUID.randomUUID().toString(),
+                name = state.name.value,
+                year = state.year.value,
+                licence = state.licence.value,
+                imageUrl = state.imageUrl.value
+            )
+            CoroutineScope(Dispatchers.IO).launch {
+                val result = if (carId != "") {
+                    safeApiCall {
+                        RetrofitClient.apiService.updateCar(
+                            id = car.id,
+                            car = car
                         )
                     }
-                    is Result.Success -> {
-                        state.copy(
-                            persistedOrDeletedCar = true
-                        )
+                } else {
+                    safeApiCall {
+                        RetrofitClient.apiService.createCar(car = car)
+                    }
+                }
+                withContext(Dispatchers.Main) {
+                    state = when (result) {
+                        is Result.Error -> {
+                            state.copy(
+                                errorWhileSaving = true
+                            )
+                        }
+                        is Result.Success -> {
+                            state.copy(
+                                persistedOrDeletedCar = true
+                            )
+                        }
                     }
                 }
             }
+            state = state.copy(isSaving = false)
         }
-        state = state.copy(isSaving = false)
+    }
+
+    private fun isValidForm(): Boolean {
+        state = state.copy(
+            name = state.name.copy(
+                errorMessageCode = validateName(state.name.value)
+            ),
+            year = state.year.copy(
+                errorMessageCode = validateYear(state.year.value)
+            ),
+            licence = state.licence.copy(
+                errorMessageCode = validateLicense(state.licence.value)
+            ),
+            imageUrl = state.imageUrl.copy(
+                errorMessageCode = validateImageUrl(state.imageUrl.value)
+            )
+        )
+        return state.isValidForm
     }
 
     fun deleteCar() {

@@ -26,4 +26,10 @@ data class FormCarState(
     val year: FormField<String> = FormField(value = ""),
     val licence: FormField<String> = FormField(value = ""),
     val imageUrl: FormField<String> = FormField(value = "")
-)
+) {
+    val isValidForm get(): Boolean =
+                name.isValid &&
+                year.isValid &&
+                licence.isValid &&
+                imageUrl.isValid
+}
