@@ -51,10 +51,10 @@ class FormCarViewModel(
                     is Result.Success -> {
                         state.copy(
                             car = result.data,
-                            name = state.name.copy(value = result.data.name),
-                            year = state.year.copy(value = result.data.year),
-                            license = state.license.copy(value = result.data.license),
-                            imageUrl = state.imageUrl.copy(value = result.data.imageUrl)
+                            name = state.name.copy(value = result.data.value.name),
+                            year = state.year.copy(value = result.data.value.year),
+                            licence = state.licence.copy(value = result.data.value.licence),
+                            imageUrl = state.imageUrl.copy(value = result.data.value.imageUrl)
                         )
                     }
                 }
@@ -118,9 +118,9 @@ class FormCarViewModel(
     }
 
     fun onLicenseChanged(newLicense: String) {
-        if (state.license.value != newLicense) {
+        if (state.licence.value != newLicense) {
             state = state.copy(
-                license = state.license.copy(
+                licence = state.licence.copy(
                     value = newLicense
                 )
             )
@@ -139,11 +139,11 @@ class FormCarViewModel(
 
     fun saveCar() {
         state = state.copy(isSaving = true)
-        val car = state.car.copy(
+        val car = state.car.value.copy(
             id = if (carId != "") carId else UUID.randomUUID().toString(),
             name = state.name.value,
             year = state.year.value,
-            license = state.license.value,
+            licence = state.licence.value,
             imageUrl = state.imageUrl.value
         )
         CoroutineScope(Dispatchers.IO).launch {
