@@ -1,6 +1,7 @@
 package br.com.vinibelo.trabalhoapicompose.ui.theme.car.details
 
 import br.com.vinibelo.trabalhoapicompose.model.Car
+import br.com.vinibelo.trabalhoapicompose.model.CarDetails
 
 data class FormField<T>(
     val value: T,
@@ -19,9 +20,10 @@ data class FormCarState(
     val errorWhileLoading: Boolean = false,
     val errorWhileSaving: Boolean = false,
     val showConfirmationDialog: Boolean = false,
-    val car: Car = Car(),
+    val carDetails: CarDetails = CarDetails(),
+    val car: Car = Car(value = carDetails),
     val name: FormField<String> = FormField(value = ""),
     val year: FormField<String> = FormField(value = ""),
-    val license: FormField<String> = FormField(value = ""),
+    val licence: FormField<String> = FormField(value = ""),
     val imageUrl: FormField<String> = FormField(value = "")
 )

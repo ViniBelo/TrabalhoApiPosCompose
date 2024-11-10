@@ -2,17 +2,22 @@ package br.com.vinibelo.trabalhoapicompose.model
 
 data class Car(
     val id: String = "000",
+    var value: CarDetails
+)
+
+data class CarDetails(
+    val id: String = "000",
     val name: String = "",
     val year: String = "",
-    val license: String = "",
+    val licence: String = "",
     val imageUrl: String = "",
     val place: CarLocation? = CarLocation(
-        latitude = 0.toDouble(),
-        longitude = 0.toDouble()
+        lat = 0.toDouble(),
+        long = 0.toDouble()
     )
 )
 
 data class CarLocation(
-    val latitude: Double,
-    val longitude: Double
+    val lat: Double,
+    val long: Double
 )

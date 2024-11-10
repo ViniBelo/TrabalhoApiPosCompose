@@ -97,7 +97,7 @@ fun FormCarScreen(
                 onSavePressed = viewModel::saveCar,
                 name = viewModel.state.name,
                 year = viewModel.state.year,
-                license = viewModel.state.license,
+                license = viewModel.state.licence,
                 imageUrl = viewModel.state.imageUrl,
                 onNameChanged = viewModel::onNameChanged,
                 onYearChanged = viewModel::onYearChanged,

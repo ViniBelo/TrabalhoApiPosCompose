@@ -26,6 +26,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import br.com.vinibelo.trabalhoapicompose.R
 import br.com.vinibelo.trabalhoapicompose.model.Car
+import br.com.vinibelo.trabalhoapicompose.model.CarDetails
 import br.com.vinibelo.trabalhoapicompose.ui.theme.TrabalhoApiComposeTheme
 import br.com.vinibelo.trabalhoapicompose.ui.theme.car.common.CarImage
 import br.com.vinibelo.trabalhoapicompose.ui.theme.car.common.SharedCarsViewModel
@@ -33,7 +34,7 @@ import br.com.vinibelo.trabalhoapicompose.ui.theme.car.common.SharedCarsViewMode
 @Composable
 fun ListCarsScreen(
     modifier: Modifier = Modifier,
-    onCarPressed: (Car) -> Unit,
+    onCarPressed: (CarDetails) -> Unit,
     onAddPressed: () -> Unit,
     onLogoutPressed: () -> Unit,
     sharedCarsViewModel: SharedCarsViewModel,
@@ -98,8 +99,8 @@ fun TopBar(
 @Composable
 fun CarList(
     modifier: Modifier = Modifier,
-    onCarPressed: (Car) -> Unit,
-    cars: List<Car>
+    onCarPressed: (CarDetails) -> Unit,
+    cars: List<CarDetails>
 ) {
     LazyColumn(modifier = modifier) {
         items(cars) { car ->
@@ -107,7 +108,7 @@ fun CarList(
                 modifier = Modifier.clickable { onCarPressed(car) },
                 headlineContent = { Text(text = car.name) },
                 supportingContent = { Text(car.year) },
-                trailingContent = { Text(car.license) },
+                trailingContent = { Text(car.licence) },
                 leadingContent = {
                     CarImage(
                         modifier = Modifier.size(70.dp),
@@ -126,12 +127,11 @@ fun CarList(
 fun CarListPreview() {
     TrabalhoApiComposeTheme {
         CarList(
-            cars = listOf<Car>(
-                Car(
-                    id = "001",
+            cars = listOf<CarDetails>(
+                CarDetails(
                     name = "Skyline",
                     year = "2001/2002",
-                    license = "ABC-1234",
+                    licence = "ABC-1234",
                     imageUrl = ""
                 )
             ),
