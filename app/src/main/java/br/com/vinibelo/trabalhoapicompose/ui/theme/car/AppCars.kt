@@ -10,7 +10,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import br.com.vinibelo.trabalhoapicompose.ui.login.LoginFormScreen
 import br.com.vinibelo.trabalhoapicompose.ui.theme.car.common.SharedCarsViewModel
-import br.com.vinibelo.trabalhoapicompose.ui.theme.car.details.FormCarScreen
+import br.com.vinibelo.trabalhoapicompose.ui.theme.car.form.FormCarScreen
 import br.com.vinibelo.trabalhoapicompose.ui.theme.car.list.ListCarsScreen
 
 private object Screens {

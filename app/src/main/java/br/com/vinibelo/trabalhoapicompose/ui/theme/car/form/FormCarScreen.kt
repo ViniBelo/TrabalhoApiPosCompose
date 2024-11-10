@@ -1,4 +1,4 @@
-package br.com.vinibelo.trabalhoapicompose.ui.theme.car.details
+package br.com.vinibelo.trabalhoapicompose.ui.theme.car.form
 
 import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult

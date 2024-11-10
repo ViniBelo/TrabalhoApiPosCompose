@@ -1,4 +1,4 @@
-package br.com.vinibelo.trabalhoapicompose.ui.theme.car.details
+package br.com.vinibelo.trabalhoapicompose.ui.theme.car.form
 
 import br.com.vinibelo.trabalhoapicompose.model.Car
 import br.com.vinibelo.trabalhoapicompose.model.CarDetails
