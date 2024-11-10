@@ -1,16 +1,28 @@
 package br.com.vinibelo.trabalhoapicompose.ui.theme.login.form
 
+import android.app.Activity
+import android.app.Application
 import android.content.Context
+import android.content.Intent
+import android.util.Log
 import android.widget.Toast
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
+import br.com.vinibelo.trabalhoapicompose.BuildConfig
 import br.com.vinibelo.trabalhoapicompose.R
 import br.com.vinibelo.trabalhoapicompose.service.auth.AccountService
 import br.com.vinibelo.trabalhoapicompose.service.auth.AccountServiceImpl
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions
+import com.google.android.gms.tasks.Task
 import com.google.firebase.Firebase
 import com.google.firebase.auth.auth
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 class LoginFormViewModel(): ViewModel() {
     private val accountService: AccountService = AccountServiceImpl()
@@ -19,6 +31,10 @@ class LoginFormViewModel(): ViewModel() {
         private set
 
     init {
+        checkIsAuthenticated()
+    }
+
+    fun checkIsAuthenticated() {
         if (Firebase.auth.currentUser != null) {
             state = state.copy(isAuthenticated = true)
         }
@@ -71,6 +87,27 @@ class LoginFormViewModel(): ViewModel() {
                 state = state.copy(
                     isAuthenticated = true
                 )
+            }
+        }
+    }
+
+    fun initiateGoogleLogin(activity: Activity, launcher: (Intent) -> Unit) {
+        val googleClientId = BuildConfig.GOOGLE_CLIENT_ID
+        val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+            .requestIdToken(googleClientId)
+            .requestEmail()
+            .build()
+
+        val googleSignInClient = GoogleSignIn.getClient(activity, gso)
+        launcher(googleSignInClient.signInIntent)
+    }
+
+    fun handleGoogleSignInResult(task: Task<GoogleSignInAccount>) {
+        CoroutineScope(Dispatchers.IO).launch {
+            accountService.handleGoogleSignInResult(task) { error, userUid ->
+                if (error == null && userUid != null) {
+                    state = state.copy(isAuthenticated = true)
+                }
             }
         }
     }
