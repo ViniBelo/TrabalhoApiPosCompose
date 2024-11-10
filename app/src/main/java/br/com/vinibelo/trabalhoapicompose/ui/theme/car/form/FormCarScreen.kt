@@ -92,27 +92,22 @@ fun FormCarScreen(
     Scaffold(
         modifier = Modifier
     ) { paddingValues ->
-        val columnModifier = Modifier
-            .padding(paddingValues)
-        Column(
-            modifier = columnModifier,
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            FormContent(
-                onDeletePressed = viewModel::showConfirmationDialog,
-                onSavePressed = viewModel::saveCar,
-                name = viewModel.state.name,
-                year = viewModel.state.year,
-                license = viewModel.state.licence,
-                imageUrl = viewModel.state.imageUrl,
-                onNameChanged = viewModel::onNameChanged,
-                onYearChanged = viewModel::onYearChanged,
-                onLicenseChanged = viewModel::onLicenseChanged,
-                onImageUrlChanged = viewModel::onImageUrlChanged,
-                onCameraPressed = { cameraLauncher.launch(uri) },
-                isEdit = viewModel.isEdit()
-            )
-        }
+        FormContent(
+            modifier = Modifier
+                .padding(paddingValues),
+            onDeletePressed = viewModel::showConfirmationDialog,
+            onSavePressed = viewModel::saveCar,
+            name = viewModel.state.name,
+            year = viewModel.state.year,
+            license = viewModel.state.licence,
+            imageUrl = viewModel.state.imageUrl,
+            onNameChanged = viewModel::onNameChanged,
+            onYearChanged = viewModel::onYearChanged,
+            onLicenseChanged = viewModel::onLicenseChanged,
+            onImageUrlChanged = viewModel::onImageUrlChanged,
+            onCameraPressed = { cameraLauncher.launch(uri) },
+            isEdit = viewModel.isEdit()
+        )
     }
 }
 
@@ -272,31 +267,35 @@ fun FormTextField(
     visualTransformation: VisualTransformation = VisualTransformation.None,
     trailingIcon: @Composable (() -> Unit)? = null
 ) {
-    val hasError = errorMessageCode > 0
-    OutlinedTextField(
-        modifier = Modifier.fillMaxWidth(),
-        value = value,
-        onValueChange = onValueChange,
-        label = { Text(text = title) },
-        maxLines = 1,
-        enabled = enabled,
-        isError = hasError,
-        readOnly = readonly,
-        keyboardOptions = KeyboardOptions(
-            capitalization = keyboardCapitalization,
-            imeAction = keyboardImeAction,
-            keyboardType = keyboardType
-        ),
-        visualTransformation = visualTransformation,
-        trailingIcon = trailingIcon
-    )
-    if (hasError) {
-        Text(
-            text = stringResource(errorMessageCode),
-            color = MaterialTheme.colorScheme.error,
-            style = MaterialTheme.typography.labelSmall,
-            modifier = Modifier.padding(top = 8.dp)
+    Column(
+        modifier = modifier
+    ) {
+        val hasError = errorMessageCode > 0
+        OutlinedTextField(
+            modifier = Modifier.fillMaxWidth(),
+            value = value,
+            onValueChange = onValueChange,
+            label = { Text(text = title) },
+            maxLines = 1,
+            enabled = enabled,
+            isError = hasError,
+            readOnly = readonly,
+            keyboardOptions = KeyboardOptions(
+                capitalization = keyboardCapitalization,
+                imeAction = keyboardImeAction,
+                keyboardType = keyboardType
+            ),
+            visualTransformation = visualTransformation,
+            trailingIcon = trailingIcon
         )
+        if (hasError) {
+            Text(
+                text = stringResource(errorMessageCode),
+                color = MaterialTheme.colorScheme.error,
+                style = MaterialTheme.typography.labelSmall,
+                modifier = Modifier.padding(top = 8.dp)
+            )
+        }
     }
 }
 
