@@ -9,9 +9,9 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import br.com.vinibelo.trabalhoapicompose.R
-import br.com.vinibelo.trabalhoapicompose.service.Result
-import br.com.vinibelo.trabalhoapicompose.service.RetrofitClient
-import br.com.vinibelo.trabalhoapicompose.service.safeApiCall
+import br.com.vinibelo.trabalhoapicompose.service.cars.Result
+import br.com.vinibelo.trabalhoapicompose.service.cars.RetrofitClient
+import br.com.vinibelo.trabalhoapicompose.service.cars.safeApiCall
 import br.com.vinibelo.trabalhoapicompose.ui.theme.car.Arguments
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage

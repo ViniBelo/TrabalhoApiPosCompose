@@ -4,9 +4,9 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
-import br.com.vinibelo.trabalhoapicompose.service.Result
-import br.com.vinibelo.trabalhoapicompose.service.RetrofitClient
-import br.com.vinibelo.trabalhoapicompose.service.safeApiCall
+import br.com.vinibelo.trabalhoapicompose.service.cars.Result
+import br.com.vinibelo.trabalhoapicompose.service.cars.RetrofitClient
+import br.com.vinibelo.trabalhoapicompose.service.cars.safeApiCall
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch

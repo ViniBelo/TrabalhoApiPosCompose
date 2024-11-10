@@ -1,4 +1,4 @@
-package br.com.vinibelo.trabalhoapicompose.service
+package br.com.vinibelo.trabalhoapicompose.service.cars
 
 import br.com.vinibelo.trabalhoapicompose.model.Car
 import retrofit2.http.Body

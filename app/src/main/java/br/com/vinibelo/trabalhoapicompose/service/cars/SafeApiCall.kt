@@ -1,4 +1,4 @@
-package br.com.vinibelo.trabalhoapicompose.service
+package br.com.vinibelo.trabalhoapicompose.service.cars
 
 import retrofit2.HttpException
 

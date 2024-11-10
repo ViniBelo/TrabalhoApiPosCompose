@@ -1,3 +1,5 @@
+import groovy.json.JsonSlurper
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
@@ -19,6 +21,15 @@ android {
         vectorDrawables {
             useSupportLibrary true
         }
+
+        def clientId = null
+        File jsonFile = file("google-services.json")
+        if (jsonFile.exists()) {
+            def json = new JsonSlurper().parse(jsonFile)
+            clientId = json.client[0].oauth_client[1].client_id
+        }
+
+        buildConfigField "String", "GOOGLE_CLIENT_ID", "\"${clientId}\""
     }
 
     buildscript {
@@ -42,6 +53,7 @@ android {
     }
     buildFeatures {
         compose true
+        buildConfig true
     }
     composeOptions {
         kotlinCompilerExtensionVersion '1.5.1'

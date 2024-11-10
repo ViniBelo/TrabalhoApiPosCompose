@@ -7,4 +7,11 @@
     <string name="deleting_car_attention_message">Do you really want to delete this car data?</string>
     <string name="image_upload_failed">Image upload failed</string>
     <string name="image_upload_success">Image uploaded successfully</string>
+    <string name="phone_number">Phone Number</string>
+    <string name="send">Send</string>
+    <string name="code">Code</string>
+    <string name="validate">Validate</string>
+    <string name="code_sent_successfully">Code sent successfully</string>
+    <string name="error_sending_code">Error sending code</string>
+    <string name="cars">Cars</string>
 </resources>
