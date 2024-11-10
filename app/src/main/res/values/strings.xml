@@ -14,4 +14,8 @@
     <string name="code_sent_successfully">Code sent successfully</string>
     <string name="error_sending_code">Error sending code</string>
     <string name="cars">Cars</string>
+    <string name="name_required">Name required</string>
+    <string name="image_url_required">Image Url required</string>
+    <string name="license_required">License required</string>
+    <string name="year_required">Year required</string>
 </resources>

@@ -1,4 +1,4 @@
-package br.com.vinibelo.trabalhoapicompose.ui.theme.car.details
+package br.com.vinibelo.trabalhoapicompose.ui.theme.car.form
 
 import br.com.vinibelo.trabalhoapicompose.model.Car
 import br.com.vinibelo.trabalhoapicompose.model.CarDetails
@@ -26,4 +26,10 @@ data class FormCarState(
     val year: FormField<String> = FormField(value = ""),
     val licence: FormField<String> = FormField(value = ""),
     val imageUrl: FormField<String> = FormField(value = "")
-)
+) {
+    val isValidForm get(): Boolean =
+                name.isValid &&
+                year.isValid &&
+                licence.isValid &&
+                imageUrl.isValid
+}

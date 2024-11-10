@@ -1,4 +1,4 @@
-package br.com.vinibelo.trabalhoapicompose.ui.theme.car.details
+package br.com.vinibelo.trabalhoapicompose.ui.theme.car.form
 
 import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
@@ -18,6 +19,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -34,6 +36,10 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardCapitalization
+import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.core.content.FileProvider
@@ -86,26 +92,22 @@ fun FormCarScreen(
     Scaffold(
         modifier = Modifier
     ) { paddingValues ->
-        val columnModifier = Modifier
-            .padding(paddingValues)
-        Column(
-            modifier = columnModifier,
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            FormContent(
-                onDeletePressed = viewModel::showConfirmationDialog,
-                onSavePressed = viewModel::saveCar,
-                name = viewModel.state.name,
-                year = viewModel.state.year,
-                license = viewModel.state.licence,
-                imageUrl = viewModel.state.imageUrl,
-                onNameChanged = viewModel::onNameChanged,
-                onYearChanged = viewModel::onYearChanged,
-                onLicenseChanged = viewModel::onLicenseChanged,
-                onImageUrlChanged = viewModel::onImageUrlChanged,
-                onCameraPressed = { cameraLauncher.launch(uri) }
-            )
-        }
+        FormContent(
+            modifier = Modifier
+                .padding(paddingValues),
+            onDeletePressed = viewModel::showConfirmationDialog,
+            onSavePressed = viewModel::saveCar,
+            name = viewModel.state.name,
+            year = viewModel.state.year,
+            license = viewModel.state.licence,
+            imageUrl = viewModel.state.imageUrl,
+            onNameChanged = viewModel::onNameChanged,
+            onYearChanged = viewModel::onYearChanged,
+            onLicenseChanged = viewModel::onLicenseChanged,
+            onImageUrlChanged = viewModel::onImageUrlChanged,
+            onCameraPressed = { cameraLauncher.launch(uri) },
+            isEdit = viewModel.isEdit()
+        )
     }
 }
 
@@ -122,7 +124,8 @@ fun FormContent(
     onYearChanged: (String) -> Unit,
     onLicenseChanged: (String) -> Unit,
     onImageUrlChanged: (String) -> Unit,
-    onCameraPressed: () -> Unit
+    onCameraPressed: () -> Unit,
+    isEdit: Boolean
 ) {
     Column(
         modifier = modifier
@@ -143,38 +146,41 @@ fun FormContent(
         }
         val textFieldModifier = Modifier
             .fillMaxWidth()
-            .padding(top = 12.dp)
+            .padding(horizontal = 16.dp, vertical = 8.dp)
         Row {
-            OutlinedTextField(
+            FormTextField(
                 modifier = textFieldModifier,
-                label = { Text("Name") },
+                title = "Name",
                 value = name.value,
+                errorMessageCode = name.errorMessageCode,
                 onValueChange = onNameChanged
             )
         }
         Row {
-            OutlinedTextField(
+            FormTextField(
                 modifier = textFieldModifier,
-                label = { Text("Year") },
+                title = "Year",
                 value = year.value,
+                errorMessageCode = year.errorMessageCode,
                 onValueChange = onYearChanged
             )
         }
         Row {
-            OutlinedTextField(
+            FormTextField(
                 modifier = textFieldModifier,
-                label = { Text("License") },
+                title = "License",
                 value = license.value,
+                errorMessageCode = license.errorMessageCode,
                 onValueChange = onLicenseChanged
             )
         }
         Row {
-            OutlinedTextField(
+            FormTextField(
                 modifier = textFieldModifier,
-                label = { Text("Image Url") },
+                title = "Image Url",
                 value = imageUrl.value,
+                errorMessageCode = imageUrl.errorMessageCode,
                 onValueChange = onImageUrlChanged,
-                maxLines = 1,
                 trailingIcon = {
                     IconButton(
                         onClick = onCameraPressed
@@ -202,22 +208,24 @@ fun FormContent(
                     text = "Save"
                 )
             }
-            Button(
-                colors = ButtonColors(
-                    containerColor = Color.Red,
-                    contentColor = Color.White,
-                    disabledContainerColor = Color.Red,
-                    disabledContentColor = Color.White
-                ),
-                onClick = onDeletePressed
-            ) {
-                Icon(
-                    imageVector = Icons.Filled.Delete,
-                    contentDescription = ""
-                )
-                Text(
-                    text = "Delete"
-                )
+            if (isEdit) {
+                Button(
+                    colors = ButtonColors(
+                        containerColor = Color.Red,
+                        contentColor = Color.White,
+                        disabledContainerColor = Color.Red,
+                        disabledContentColor = Color.White
+                    ),
+                    onClick = onDeletePressed
+                ) {
+                    Icon(
+                        imageVector = Icons.Filled.Delete,
+                        contentDescription = ""
+                    )
+                    Text(
+                        text = "Delete"
+                    )
+                }
             }
         }
     }
@@ -238,8 +246,56 @@ fun FormContentPreview() {
             onYearChanged = {},
             onLicenseChanged = {},
             onImageUrlChanged = {},
-            onCameraPressed = {}
+            onCameraPressed = {},
+            isEdit = true
         )
+    }
+}
+
+@Composable
+fun FormTextField(
+    modifier: Modifier = Modifier,
+    title: String,
+    value: String,
+    onValueChange: (String) -> Unit,
+    enabled: Boolean = true,
+    errorMessageCode: Int = 0,
+    readonly: Boolean = false,
+    keyboardCapitalization: KeyboardCapitalization = KeyboardCapitalization.Sentences,
+    keyboardImeAction: ImeAction = ImeAction.Next,
+    keyboardType: KeyboardType = KeyboardType.Text,
+    visualTransformation: VisualTransformation = VisualTransformation.None,
+    trailingIcon: @Composable (() -> Unit)? = null
+) {
+    Column(
+        modifier = modifier
+    ) {
+        val hasError = errorMessageCode > 0
+        OutlinedTextField(
+            modifier = Modifier.fillMaxWidth(),
+            value = value,
+            onValueChange = onValueChange,
+            label = { Text(text = title) },
+            maxLines = 1,
+            enabled = enabled,
+            isError = hasError,
+            readOnly = readonly,
+            keyboardOptions = KeyboardOptions(
+                capitalization = keyboardCapitalization,
+                imeAction = keyboardImeAction,
+                keyboardType = keyboardType
+            ),
+            visualTransformation = visualTransformation,
+            trailingIcon = trailingIcon
+        )
+        if (hasError) {
+            Text(
+                text = stringResource(errorMessageCode),
+                color = MaterialTheme.colorScheme.error,
+                style = MaterialTheme.typography.labelSmall,
+                modifier = Modifier.padding(top = 8.dp)
+            )
+        }
     }
 }
 
