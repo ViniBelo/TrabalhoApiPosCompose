@@ -24,11 +24,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -37,7 +35,6 @@ import br.com.vinibelo.trabalhoapicompose.R
 import br.com.vinibelo.trabalhoapicompose.ui.theme.TrabalhoApiComposeTheme
 import br.com.vinibelo.trabalhoapicompose.ui.theme.login.form.LoginFormViewModel
 import com.google.android.gms.auth.api.signin.GoogleSignIn
-import com.google.firebase.auth.FirebaseAuth
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
@@ -46,7 +43,6 @@ fun LoginFormScreen(
     loginFormViewModel: LoginFormViewModel = viewModel(),
     onUserAuthenticated: () -> Unit
 ) {
-    FirebaseAuth.getInstance().setLanguageCode("pt")
     val context = LocalContext.current
     val activity = context as Activity
 
@@ -54,7 +50,9 @@ fun LoginFormScreen(
         contract = ActivityResultContracts.StartActivityForResult()
     ) { result ->
         val task = GoogleSignIn.getSignedInAccountFromIntent(result.data)
-        loginFormViewModel.handleGoogleSignInResult(task)
+        loginFormViewModel.handleGoogleSignInResult(task) {
+            loginFormViewModel.checkIsAuthenticated()
+        }
     }
 
     LaunchedEffect(loginFormViewModel.state.isAuthenticated) {
@@ -62,6 +60,7 @@ fun LoginFormScreen(
             onUserAuthenticated()
         }
     }
+
     Scaffold(
         modifier = modifier
             .fillMaxSize()

@@ -1,10 +1,8 @@
 package br.com.vinibelo.trabalhoapicompose.ui.theme.login.form
 
 import android.app.Activity
-import android.app.Application
 import android.content.Context
 import android.content.Intent
-import android.util.Log
 import android.widget.Toast
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -35,9 +33,7 @@ class LoginFormViewModel(): ViewModel() {
     }
 
     fun checkIsAuthenticated() {
-        if (Firebase.auth.currentUser != null) {
-            state = state.copy(isAuthenticated = true)
-        }
+        state = state.copy(isAuthenticated = Firebase.auth.currentUser != null)
     }
 
     fun onPhoneNumberChange(newPhoneNumber: String) {
@@ -102,7 +98,7 @@ class LoginFormViewModel(): ViewModel() {
         launcher(googleSignInClient.signInIntent)
     }
 
-    fun handleGoogleSignInResult(task: Task<GoogleSignInAccount>) {
+    fun handleGoogleSignInResult(task: Task<GoogleSignInAccount>, function: () -> Unit) {
         CoroutineScope(Dispatchers.IO).launch {
             accountService.handleGoogleSignInResult(task) { error, userUid ->
                 if (error == null && userUid != null) {

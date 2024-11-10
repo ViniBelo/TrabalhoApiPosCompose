@@ -45,7 +45,9 @@ fun AppCars(
         composable(route = Routes.FORM_LOGIN) {
             LoginFormScreen(
                 onUserAuthenticated = {
-                    navController.navigate(Screens.LIST_CARS)
+                    navController.navigate(Screens.LIST_CARS) {
+                        popUpTo(Screens.FORM_LOGIN) { inclusive = true }
+                    }
                 }
             )
         }
@@ -57,6 +59,12 @@ fun AppCars(
                 },
                 onCarPressed = { car ->
                     navController.navigate("${Screens.FORM_CAR}?${Arguments.CAR_ID}=${car.id}")
+                },
+                onLogoutPressed = {
+                    sharedCarsViewModel.logout()
+                    navController.navigate(Screens.FORM_LOGIN) {
+                        popUpTo(Screens.LIST_CARS) { inclusive = true }
+                    }
                 }
             )
         }

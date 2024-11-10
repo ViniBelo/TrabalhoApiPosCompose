@@ -13,4 +13,5 @@
     <string name="validate">Validate</string>
     <string name="code_sent_successfully">Code sent successfully</string>
     <string name="error_sending_code">Error sending code</string>
+    <string name="cars">Cars</string>
 </resources>
